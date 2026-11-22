@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sổ Ghi Nhận Công Tác Tức Thì - Ngô Quốc Tuyền</title>
+  <style>
+    :root {
+      --primary: #1e4620;
+      --primary-light: #2d6a4f;
+      --accent: #f59e0b;
+      --excel: #107c41;
+      --word: #185abd;
+      --bg: #f1f5f9;
+      --surface: #ffffff;
+      --border: #cbd5e1;
+      --text: #0f172a;
+      --danger: #dc2626;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+    body { background: var(--bg); color: var(--text); padding: 18px 12px; }
+    .container { max-width: 1050px; margin: auto; }
+
+    /* BANNER TÁC QUYỀN */
+    .banner {
+      background: linear-gradient(135deg, #0d2818 0%, #1e4620 60%, #2d6a4f 100%);
+      color: #fff;
+      padding: 22px 18px;
+      border-radius: 10px;
+      text-align: center;
+      margin-bottom: 18px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .banner h1 { font-size: 1.45rem; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px; }
+    .author-tag {
+      display: inline-block;
+      margin-top: 6px;
+      font-size: 1.2rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: #fde047;
+      text-shadow: 1px 2px 3px rgba(0,0,0,0.5);
+      background: rgba(0,0,0,0.3);
+      padding: 5px 20px;
+      border-radius: 20px;
+      border: 1px solid rgba(253, 224, 71, 0.4);
+    }
+
+    /* KHỐI CARD */
+    .card {
+      background: var(--surface);
+      border-radius: 8px;
+      padding: 18px;
+      margin-bottom: 16px;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+    }
+
+    /* KHỐI NHẬP LIỆU MỞ RỘNG TOÀN DIỆN */
+    .input-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .time-picker-wrapper {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    label.time-label {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #334155;
+    }
+    input[type="datetime-local"] {
+      padding: 8px 12px;
+      border: 2px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.95rem;
+      outline: none;
+      background: #f8fafc;
+      color: #1e293b;
+      font-weight: 600;
+    }
+    input[type="datetime-local"]:focus {
+      border-color: var(--primary-light);
+      background: #fff;
+    }
+
+    /* Ô NHẬP NHIỆM VỤ RỘNG RÃI */
+    .task-input-field {
+      width: 100%;
+      min-height: 85px;
+      padding: 12px 14px;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      font-size: 1.05rem;
+      line-height: 1.5;
+      outline: none;
+      resize: vertical;
+      background: #f8fafc;
+      color: var(--text);
+      transition: all 0.2s;
+    }
+    .task-input-field:focus {
+      border-color: var(--primary-light);
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.15);
+    }
+
+    .action-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .shortcut-hint {
+      font-size: 0.85rem;
+      color: #64748b;
+      font-style: italic;
+    }
+
+    /* NÚT BẤM */
+    button {
+      cursor: pointer;
+      padding: 9px 16px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.92rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn-save { background: var(--primary); color: #fff; }
+    .btn-save:hover { background: var(--primary-light); }
+    .btn-now { background: #e2e8f0; color: #334155; padding: 8px 12px; font-size: 0.85rem; }
+    .btn-now:hover { background: #cbd5e1; }
+    .btn-cancel { background: #94a3b8; color: #fff; display: none; }
+    .btn-cancel:hover { background: #64748b; }
+
+    .btn-filter { background: #475569; color: #fff; }
+    .btn-filter:hover { background: #334155; }
+    .btn-excel { background: var(--excel); color: #fff; }
+    .btn-excel:hover { background: #0c6434; }
+    .btn-word { background: var(--word); color: #fff; }
+    .btn-word:hover { background: #134796; }
+    .btn-print { background: #0284c7; color: #fff; }
+    .btn-print:hover { background: #0369a1; }
+
+    .btn-action { background: transparent; padding: 4px 8px; font-size: 0.82rem; border-radius: 4px; }
+    .btn-action.edit { color: #0284c7; }
+    .btn-action.edit:hover { background: #e0f2fe; }
+    .btn-action.del { color: var(--danger); margin-left: 4px; }
+    .btn-action.del:hover { background: #fee2e2; }
+
+    /* KHỐI LỌC & XUẤT FILE */
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      font-size: 0.9rem;
+    }
+    .filter-bar input[type="date"] {
+      padding: 7px 10px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-size: 0.9rem;
+    }
+
+    /* BẢNG DỮ LIỆU */
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.93rem; }
+    th, td { border: 1px solid var(--border); padding: 10px 12px; }
+    th { background: #f8fafc; font-weight: 600; text-align: center; }
+    .time-col { width: 165px; font-weight: 600; color: #334155; white-space: nowrap; text-align: center; }
+    .stt-col { width: 45px; text-align: center; }
+    .action-col { width: 110px; text-align: center; }
+
+    /* FOOTER BẢN QUYỀN */
+    .credit {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 0.88rem;
+      color: #64748b;
+    }
+    .credit strong { color: var(--primary); font-size: 0.95rem; }
+
+    /* BẢN IN CHUẨN THỂ THỨC */
+    #printSection { display: none; }
+    @media print {
+      body * { visibility: hidden; }
+      #printSection, #printSection * { visibility: visible; }
+      #printSection {
+        display: block !important;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        background: #fff;
+        color: #000;
+        font-family: 'Times New Roman', Times, serif;
+      }
+      .report-header { text-align: center; margin-bottom: 20px; }
+      .report-header h3 { font-size: 13pt; text-transform: uppercase; font-weight: bold; margin-bottom: 2px; }
+      .report-header .sub-title { font-size: 13pt; font-weight: bold; margin-bottom: 12px; text-decoration: underline; }
+      .report-header h1 { font-size: 15pt; text-transform: uppercase; margin-bottom: 6px; font-weight: bold; }
+      .report-header .period { font-size: 11.5pt; font-style: italic; }
+      .report-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+      .report-table th, .report-table td { border: 1px solid #000; padding: 6px 8px; font-size: 11pt; }
+      .report-table th { background: #f0f0f0 !important; font-weight: bold; }
+      .report-footer {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 35px;
+        page-break-inside: avoid;
+        font-size: 11.5pt;
+      }
+      .report-footer div { text-align: center; width: 45%; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- BANNER TÁC QUYỀN -->
+  <div class="banner">
+    <h1>HỆ THỐNG NHẬT KÝ & TỔNG HỢP CÔNG TÁC</h1>
+    <div class="author-tag">Sáng tạo bởi: NGÔ QUỐC TUYỀN</div>
+  </div>
+
+  <!-- KHỐI 1: NHẬP VÀ SỬA NHIỆM VỤ (Ô RỘNG RÃI) -->
+  <div class="card">
+    <input type="hidden" id="editId">
+    
+    <div class="input-header">
+      <div class="time-picker-wrapper">
+        <label class="time-label">Thời gian thực hiện:</label>
+        <input type="datetime-local" id="taskTime" title="Thời gian ghi nhận (bấm để sửa lùi/tiến giờ)">
+        <button type="button" class="btn-now" onclick="syncCurrentTime()" title="Cập nhật đúng thời gian tích tắc hiện tại">⏱ Hiện tại</button>
+      </div>
+      <div id="editingStatus" style="font-size: 0.88rem; font-weight: 600; color: #b45309; display: none;">
+        ✏️ Đang ở chế độ chỉnh sửa nội dung
+      </div>
+    </div>
+
+    <!-- Ô NHẬP NỘI DUNG NHIỆM VỤ RỘNG TỐI ĐA -->
+    <textarea id="taskInput" class="task-input-field" placeholder="Nhập nội dung nhiệm vụ tại đây (Ô rộng rãi, thoải mái ghi chép chi tiết công việc, số liệu kỹ thuật, vị trí...). Nhấn phím tắt [Ctrl + Enter] hoặc bấm nút Lưu..." autofocus></textarea>
+
+    <div class="action-row">
+      <span class="shortcut-hint">Mẹo: Nhấn <b>Ctrl + Enter</b> để lưu nhanh mà không cần dùng chuột</span>
+      <div style="display: flex; gap: 8px;">
+        <button class="btn-save" id="saveBtn" onclick="saveTask()">💾 Lưu Tức Thì</button>
+        <button class="btn-cancel" id="cancelBtn" onclick="cancelEdit()">Hủy sửa</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- KHỐI 2: LỌC & XUẤT BÁO CÁO (WORD / EXCEL / IN) -->
+  <div class="card">
+    <div class="filter-bar">
+      <span>Từ ngày:</span>
+      <input type="date" id="filterFrom">
+      <span>Đến ngày:</span>
+      <input type="date" id="filterTo">
+      <button class="btn-filter" onclick="applyFilter()">Lọc</button>
+      <button class="btn-excel" onclick="exportExcel()">📊 Xuất File Excel</button>
+      <button class="btn-word" onclick="exportWord()">📄 Xuất File Word</button>
+      <button class="btn-print" onclick="printReport()">🖨️ In / PDF</button>
+      <button style="background: transparent; border: 1px solid #cbd5e1; color: #475569;" onclick="resetFilter()">Xem tất cả</button>
+    </div>
+  </div>
+
+  <!-- KHỐI 3: DANH SÁCH NHẬT KÝ -->
+  <div class="card">
+    <div style="font-weight: 600; margin-bottom: 8px; color: #334155;">
+      Nhật ký nhiệm vụ (<span id="taskCount">0</span> việc)
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th class="stt-col">STT</th>
+          <th class="time-col">Thời gian</th>
+          <th>Nội dung nhiệm vụ (Mỗi nhiệm vụ 1 dòng)</th>
+          <th class="action-col">Thao tác</th>
+        </tr>
+      </thead>
+      <tbody id="taskTableBody"></tbody>
+    </table>
+  </div>
+
+  <div class="credit">
+    Công cụ hỗ trợ tổng hợp báo cáo ngành | <strong>Sáng tạo bởi: Ngô Quốc Tuyền</strong>
+  </div>
+</div>
+
+<!-- KHUNG IN BÁO CÁO CHUẨN THỂ THỨC (KHI BẤM IN) -->
+<div id="printSection">
+  <div class="report-header">
+    <h3>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</h3>
+    <div class="sub-title">Độc lập - Tự do - Hạnh phúc</div>
+    <br>
+    <h1>BÁO CÁO TỔNG HỢP KẾT QUẢ THỰC HIỆN NHIỆM VỤ</h1>
+    <div class="period" id="reportPeriodText">Thời gian: ...</div>
+  </div>
+
+  <table class="report-table">
+    <thead>
+      <tr>
+        <th style="width: 45px; text-align: center;">STT</th>
+        <th style="width: 150px; text-align: center;">Thời gian</th>
+        <th>Nội dung nhiệm vụ thực hiện</th>
+      </tr>
+    </thead>
+    <tbody id="printTableBody"></tbody>
+  </table>
+
+  <div class="report-footer">
+    <div>
+      <p style="font-weight: bold; text-transform: uppercase;">NGƯỜI LẬP BÁO CÁO</p>
+      <p style="font-style: italic; margin-top: 4px;">(Ký, ghi rõ họ tên)</p>
+      <br><br><br><br>
+      <p style="font-weight: bold;">Ngô Quốc Tuyền</p>
+    </div>
+    <div>
+      <p id="reportDateNow" style="font-style: italic;">Ngày .... tháng .... năm ....</p>
+      <p style="font-weight: bold; text-transform: uppercase;">CHỈ HUY PHÊ DUYỆT</p>
+      <p style="font-style: italic; margin-top: 4px;">(Ký, ghi rõ họ tên)</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  const STORAGE_KEY = 'INSTANT_TASK_LOG_EXPANDED';
+  let tasks = [];
+
+  try {
+    tasks = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+  } catch (e) {
+    tasks = [];
+  }
+
+  // Định dạng chuẩn giờ địa phương YYYY-MM-DDTHH:mm
+  function getLocalIsoDateTime(d = new Date()) {
+    const pad = (n) => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+
+  function formatDisplayTime(dateTimeStr) {
+    if (!dateTimeStr) return '';
+    const parts = dateTimeStr.split('T');
+    if (parts.length < 2) return dateTimeStr;
+    const dateParts = parts[0].split('-');
+    const timeParts = parts[1].split(':');
+    return `${timeParts[0]}:${timeParts[1]} - ${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+  }
+
+  function syncCurrentTime() {
+    document.getElementById('taskTime').value = getLocalIsoDateTime(new Date());
+  }
+
+  function resetForm() {
+    document.getElementById('editId').value = '';
+    const textarea = document.getElementById('taskInput');
+    textarea.value = '';
+    textarea.style.height = '85px';
+    document.getElementById('saveBtn').innerText = '💾 Lưu Tức Thì';
+    document.getElementById('cancelBtn').style.display = 'none';
+    document.getElementById('editingStatus').style.display = 'none';
+    syncCurrentTime();
+    textarea.focus();
+  }
+
+  function saveTask() {
+    const textarea = document.getElementById('taskInput');
+    const content = textarea.value.trim();
+    let timeVal = document.getElementById('taskTime').value;
+    const editId = document.getElementById('editId').value;
+
+    if (!content) {
+      textarea.focus();
+      return;
+    }
+
+    if (!timeVal) {
+      timeVal = getLocalIsoDateTime(new Date());
+    }
+
+    if (editId) {
+      const idx = tasks.findIndex(t => t.id === editId);
+      if (idx !== -1) {
+        tasks[idx].content = content;
+        tasks[idx].dateTime = timeVal;
+      }
+    } else {
+      const newTask = {
+        id: 'T_' + Date.now(),
+        dateTime: timeVal,
+        content: content
+      };
+      tasks.unshift(newTask);
+    }
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+    resetForm();
+    applyFilter();
+  }
+
+  function editTask(id) {
+    const t = tasks.find(item => item.id === id);
+    if (!t) return;
+    document.getElementById('editId').value = t.id;
+    document.getElementById('taskTime').value = t.dateTime;
+    const textarea = document.getElementById('taskInput');
+    textarea.value = t.content;
+    document.getElementById('saveBtn').innerText = '✔️ Cập Nhật';
+    document.getElementById('cancelBtn').style.display = 'inline-block';
+    document.getElementById('editingStatus').style.display = 'block';
+    
+    // Tự động điều chỉnh độ cao theo nội dung
+    textarea.style.height = 'auto';
+    textarea.style.height = (textarea.scrollHeight + 5) + 'px';
+    textarea.focus();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function cancelEdit() {
+    resetForm();
+  }
+
+  // Tự động giãn nở ô textarea khi gõ nhiều dòng
+  const taskTextarea = document.getElementById('taskInput');
+  taskTextarea.addEventListener('input', function() {
+    this.style.height = 'auto';
+    this.style.height = (this.scrollHeight + 5) + 'px';
+  });
+
+  // Hỗ trợ phím tắt Ctrl + Enter để lưu tức thì
+  taskTextarea.addEventListener('keydown', function(e) {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+      e.preventDefault();
+      saveTask();
+    }
+  });
+
+  function deleteTask(id) {
+    if (confirm('Xóa bản ghi công việc này?')) {
+      tasks = tasks.filter(t => t.id !== id);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+      applyFilter();
+    }
+  }
+
+  function getFilteredTasks() {
+    const from = document.getElementById('filterFrom').value;
+    const to = document.getElementById('filterTo').value;
+
+    return tasks.filter(item => {
+      const itemDate = (item.dateTime || '').substring(0, 10);
+      if (from && itemDate < from) return false;
+      if (to && itemDate > to) return false;
+      return true;
+    }).sort((a, b) => (b.dateTime > a.dateTime ? 1 : -1));
+  }
+
+  function renderTable(data) {
+    const tbody = document.getElementById('taskTableBody');
+    tbody.innerHTML = '';
+    document.getElementById('taskCount').innerText = data.length;
+
+    if (data.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #94a3b8; padding: 18px;">Chưa có dữ liệu nào phù hợp với bộ lọc.</td></tr>`;
+      return;
+    }
+
+    data.forEach((t, idx) => {
+      const tr = document.createElement('tr');
+
+      const tdIndex = document.createElement('td');
+      tdIndex.className = 'stt-col';
+      tdIndex.textContent = idx + 1;
+
+      const tdTime = document.createElement('td');
+      tdTime.className = 'time-col';
+      tdTime.textContent = formatDisplayTime(t.dateTime);
+
+      const tdContent = document.createElement('td');
+      tdContent.style.whiteSpace = 'pre-wrap';
+      tdContent.style.wordBreak = 'break-word';
+      tdContent.textContent = t.content;
+
+      const tdAction = document.createElement('td');
+      tdAction.className = 'action-col';
+
+      const editBtn = document.createElement('button');
+      editBtn.className = 'btn-action edit';
+      editBtn.textContent = 'Sửa';
+      editBtn.onclick = () => editTask(t.id);
+
+      const delBtn = document.createElement('button');
+      delBtn.className = 'btn-action del';
+      delBtn.textContent = 'Xóa';
+      delBtn.onclick = () => deleteTask(t.id);
+
+      tdAction.appendChild(editBtn);
+      tdAction.appendChild(delBtn);
+
+      tr.appendChild(tdIndex);
+      tr.appendChild(tdTime);
+      tr.appendChild(tdContent);
+      tr.appendChild(tdAction);
+
+      tbody.appendChild(tr);
+    });
+  }
+
+  function applyFilter() {
+    renderTable(getFilteredTasks());
+  }
+
+  function resetFilter() {
+    document.getElementById('filterFrom').value = '';
+    document.getElementById('filterTo').value = '';
+    applyFilter();
+  }
+
+  function getPeriodString() {
+    const from = document.getElementById('filterFrom').value;
+    const to = document.getElementById('filterTo').value;
+    if (from && to) return `Từ ngày ${from.split('-').reverse().join('/')} đến ngày ${to.split('-').reverse().join('/')}`;
+    if (from) return `Từ ngày ${from.split('-').reverse().join('/')} đến nay`;
+    if (to) return `Tính đến ngày ${to.split('-').reverse().join('/')}`;
+    return "Toàn bộ thời gian ghi nhận";
+  }
+
+  function exportExcel() {
+    const data = getFilteredTasks();
+    if (data.length === 0) {
+      alert('Không có dữ liệu để xuất file Excel.');
+      return;
+    }
+
+    const period = getPeriodString();
+    const now = new Date();
+    const dateStr = `Ngày ${now.getDate()} tháng ${now.getMonth() + 1} năm ${now.getFullYear()}`;
+
+    let excelHTML = `
+      <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+      <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>
+        <x:Name>BaoCaoCongTac</x:Name>
+        <x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet>
+        </x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->
+        <style>
+          td, th { font-family: 'Times New Roman', serif; font-size: 11pt; }
+          .center { text-align: center; }
+          .bold { font-weight: bold; }
+          .border { border: 0.5pt solid #000; }
+          .header-bg { background-color: #e5e7eb; }
+        </style>
+      </head>
+      <body>
+        <table border="0">
+          <tr><td colspan="3" class="center bold" style="font-size: 13pt;">CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</td></tr>
+          <tr><td colspan="3" class="center bold" style="font-size: 12pt;">Độc lập - Tự do - Hạnh phúc</td></tr>
+          <tr><td colspan="3"></td></tr>
+          <tr><td colspan="3" class="center bold" style="font-size: 15pt;">BÁO CÁO TỔNG HỢP KẾT QUẢ THỰC HIỆN NHIỆM VỤ</td></tr>
+          <tr><td colspan="3" class="center" style="font-style: italic;">(${period})</td></tr>
+          <tr><td colspan="3"></td></tr>
+          <tr class="header-bg">
+            <th class="border center bold" style="width: 50px;">STT</th>
+            <th class="border center bold" style="width: 170px;">Thời gian thực hiện</th>
+            <th class="border center bold" style="width: 520px;">Nội dung nhiệm vụ</th>
+          </tr>
+    `;
+
+    data.forEach((t, i) => {
+      excelHTML += `
+        <tr>
+          <td class="border center" style="vertical-align: top;">${i + 1}</td>
+          <td class="border center" style="vertical-align: top;">${formatDisplayTime(t.dateTime)}</td>
+          <td class="border" style="vertical-align: top;">${t.content.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br>")}</td>
+        </tr>
+      `;
+    });
+
+    excelHTML += `
+          <tr><td colspan="3"></td></tr>
+          <tr>
+            <td class="bold center" style="text-transform: uppercase;">NGƯỜI LẬP BÁO CÁO</td>
+            <td></td>
+            <td class="center" style="font-style: italic;">${dateStr}</td>
+          </tr>
+          <tr>
+            <td class="center" style="font-style: italic;">(Ký, ghi rõ họ tên)</td>
+            <td></td>
+            <td class="bold center" style="text-transform: uppercase;">CHỈ HUY PHÊ DUYỆT</td>
+          </tr>
+          <tr><td colspan="3" style="height: 50px;"></td></tr>
+          <tr>
+            <td class="bold center">Ngô Quốc Tuyền</td>
+            <td></td>
+            <td></td>
+          </tr>
+        </table>
+      </body>
+      </html>
+    `;
+
+    const blob = new Blob([excelHTML], { type: 'application/vnd.ms-excel;charset=utf-8' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `BaoCao_NhiemVu_${new Date().toISOString().substring(0,10)}.xls`;
+    link.click();
+    URL.revokeObjectURL(link.href);
+  }
+
+  function exportWord() {
+    const data = getFilteredTasks();
+    if (data.length === 0) {
+      alert('Không có dữ liệu để xuất file Word.');
+      return;
+    }
+
+    const period = getPeriodString();
+    const now = new Date();
+    const dateStr = `Ngày ${now.getDate()} tháng ${now.getMonth() + 1} năm ${now.getFullYear()}`;
+
+    let wordHTML = `
+      <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+      <head>
+        <meta charset='utf-8'>
+        <title>Báo Cáo Công Tác</title>
+        <style>
+          body { font-family: 'Times New Roman', serif; font-size: 13pt; line-height: 1.3; }
+          .center { text-align: center; }
+          .bold { font-weight: bold; }
+          table.report { width: 100%; border-collapse: collapse; margin-top: 15px; }
+          table.report th, table.report td { border: 1px solid black; padding: 6px 8px; font-size: 12pt; }
+          table.report th { background-color: #f2f2f2; font-weight: bold; }
+          .footer-table { width: 100%; border: none; margin-top: 35px; }
+          .footer-table td { border: none; text-align: center; font-size: 12pt; vertical-align: top; }
+        </style>
+      </head>
+      <body>
+        <div class="center bold" style="font-size: 13pt;">CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</div>
+        <div class="center bold" style="font-size: 13pt; text-decoration: underline; margin-bottom: 20px;">Độc lập - Tự do - Hạnh phúc</div>
+        
+        <div class="center bold" style="font-size: 15pt; text-transform: uppercase;">BÁO CÁO TỔNG HỢP KẾT QUẢ THỰC HIỆN NHIỆM VỤ</div>
+        <div class="center" style="font-style: italic; margin-top: 4px; margin-bottom: 15px;">(${period})</div>
+
+        <table class="report">
+          <thead>
+            <tr>
+              <th style="width: 45px;" class="center">STT</th>
+              <th style="width: 150px;" class="center">Thời gian</th>
+              <th class="center">Nội dung nhiệm vụ thực hiện</th>
+            </tr>
+          </thead>
+          <tbody>
+    `;
+
+    data.forEach((t, i) => {
+      wordHTML += `
+        <tr>
+          <td class="center" style="vertical-align: top;">${i + 1}</td>
+          <td class="center" style="vertical-align: top; white-space: nowrap;">${formatDisplayTime(t.dateTime)}</td>
+          <td style="vertical-align: top;">${t.content.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br>")}</td>
+        </tr>
+      `;
+    });
+
+    wordHTML += `
+          </tbody>
+        </table>
+
+        <table class="footer-table">
+          <tr>
+            <td style="width: 50%;" class="bold">NGƯỜI LẬP BÁO CÁO<br><span style="font-weight: normal; font-style: italic;">(Ký, ghi rõ họ tên)</span></td>
+            <td style="width: 50%;">
+              <span style="font-style: italic;">${dateStr}</span><br>
+              <span class="bold">CHỈ HUY PHÊ DUYỆT</span><br>
+              <span style="font-style: italic;">(Ký, ghi rõ họ tên)</span>
+            </td>
+          </tr>
+          <tr>
+            <td style="height: 75px;"></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class="bold">Ngô Quốc Tuyền</td>
+            <td></td>
+          </tr>
+        </table>
+      </body>
+      </html>
+    `;
+
+    const blob = new Blob(['\ufeff' + wordHTML], { type: 'application/msword;charset=utf-8' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `BaoCao_NhiemVu_${new Date().toISOString().substring(0,10)}.doc`;
+    link.click();
+    URL.revokeObjectURL(link.href);
+  }
+
+  function printReport() {
+    const filtered = getFilteredTasks();
+    document.getElementById('reportPeriodText').innerText = `Giai đoạn: ${getPeriodString()}`;
+
+    const now = new Date();
+    document.getElementById('reportDateNow').innerText = `Ngày ${now.getDate()} tháng ${now.getMonth() + 1} năm ${now.getFullYear()}`;
+
+    const printTbody = document.getElementById('printTableBody');
+    printTbody.innerHTML = '';
+
+    filtered.forEach((t, i) => {
+      const tr = document.createElement('tr');
+
+      const tdIndex = document.createElement('td');
+      tdIndex.style.textAlign = 'center';
+      tdIndex.textContent = i + 1;
+
+      const tdTime = document.createElement('td');
+      tdTime.style.textAlign = 'center';
+      tdTime.textContent = formatDisplayTime(t.dateTime);
+
+      const tdContent = document.createElement('td');
+      tdContent.style.whiteSpace = 'pre-wrap';
+      tdContent.textContent = t.content;
+
+      tr.appendChild(tdIndex);
+      tr.appendChild(tdTime);
+      tr.appendChild(tdContent);
+
+      printTbody.appendChild(tr);
+    });
+
+    window.print();
+  }
+
+  window.onload = function() {
+    syncCurrentTime();
+    applyFilter();
+  };
+</script>
+</body>
+</html>
